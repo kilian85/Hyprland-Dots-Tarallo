@@ -1,0 +1,52 @@
+#!/bin/bash
+# biometrics-pam-apply
+# Helper con privilegi per configurare l'ordine PAM biometrico
+# Eseguito tramite pkexec — NON eseguire direttamente come root
+
+SERVICE="$1"   # sddm | sudo
+ORDER="$2"     # face,fingerprint | fingerprint,face | face | fingerprint | password
+
+case "$SERVICE" in
+    sddm|sudo) PAM_FILE="/etc/pam.d/$SERVICE" ;;
+    *) echo "Servizio non supportato: $SERVICE" >&2; exit 1 ;;
+esac
+
+[ -f "$PAM_FILE" ] || { echo "File PAM non trovato: $PAM_FILE" >&2; exit 1; }
+
+# Backup con timestamp
+cp "$PAM_FILE" "${PAM_FILE}.bak.$(date +%Y%m%d-%H%M%S)"
+
+# Costruisce le righe biometriche nel formato corretto
+IFS=',' read -ra METHODS <<< "$ORDER"
+COUNT=${#METHODS[@]}
+BIOMETRIC_LINES=""
+
+for method in "${METHODS[@]}"; do
+    if [ "$COUNT" -gt 1 ]; then
+        # Più metodi in sequenza: [success=done default=ignore] per ciascuno
+        case "$method" in
+            face)        BIOMETRIC_LINES+="auth [success=done default=ignore] pam_howdy.so\n" ;;
+            fingerprint) BIOMETRIC_LINES+="auth [success=done default=ignore] pam_fprintd.so\n" ;;
+        esac
+    else
+        # Metodo singolo: formato nativo già in uso su questo sistema
+        case "$method" in
+            face)        BIOMETRIC_LINES+="auth [success=done new_authtok_reqd=done default=ignore] pam_howdy.so\n" ;;
+            fingerprint) BIOMETRIC_LINES+="auth sufficient pam_fprintd.so\n" ;;
+            password)    BIOMETRIC_LINES="" ;;  # nessuna riga da aggiungere
+        esac
+    fi
+done
+
+# Modifica il file PAM tramite awk:
+# - rimuove le righe biometriche esistenti
+# - inserisce le nuove righe subito prima della prima "auth include system-*"
+awk -v bio="$BIOMETRIC_LINES" '
+BEGIN { inserted = 0 }
+/pam_howdy\.so|pam_fprintd\.so/ { next }
+/^auth[[:space:]].*include/ && !inserted {
+    if (bio != "") printf "%s", bio
+    inserted = 1
+}
+{ print }
+' "$PAM_FILE" > "${PAM_FILE}.tmp" && mv "${PAM_FILE}.tmp" "$PAM_FILE"

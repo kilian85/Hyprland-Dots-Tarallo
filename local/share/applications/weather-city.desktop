@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Imposta Città Meteo
+Comment=Cambia la città delle previsioni meteo
+Exec=/home/tanarox/.config/hypr/UserScripts/WeatherCity.sh
+Icon=weather-clear
+Terminal=false
+Type=Application
+Categories=Settings;

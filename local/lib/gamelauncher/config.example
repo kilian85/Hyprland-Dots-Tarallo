@@ -1,0 +1,12 @@
+# Game Launcher — configurazione
+#
+# API key gratuita di SteamGridDB per scaricare copertine per giochi non-Steam.
+# Come ottenerla:
+#   1. Registrati su https://www.steamgriddb.com  (gratis)
+#   2. Clicca sul tuo avatar → Preferenze → API → Generate Key
+#   3. Incolla la key qui sotto e salva il file
+#
+# Senza questa key il launcher funziona lo stesso,
+# ma le copertine per Lutris/Wine/AUR non vengono scaricate.
+
+STEAMGRIDDB_API_KEY=la-tua-key-qui

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Configurazione Biometrica
+Comment=Configura impronte digitali e riconoscimento viso
+Exec=/home/tanarox/.config/hypr/UserScripts/BiometricsSetup.sh
+Icon=preferences-system-privacy
+Terminal=false
+Type=Application
+Categories=Settings;Security;
+Keywords=biometria;impronta;viso;fingerprint;howdy;autenticazione;

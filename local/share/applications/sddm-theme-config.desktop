@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Tema SDDM
+Comment=Scegli il tema della schermata di login
+Exec=/home/tanarox/.config/hypr/UserScripts/SddmThemeConfig.sh
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;

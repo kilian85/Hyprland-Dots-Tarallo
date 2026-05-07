@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Benvenuto — Hyprland Tarallo
+Comment=Schermata di benvenuto e configurazione rapida
+Exec=/home/tanarox/.config/hypr/UserScripts/WelcomeTarallo.sh
+Icon=preferences-system
+Terminal=false
+Type=Application
+Categories=Settings;System;
+Keywords=benvenuto;welcome;tarallo;configurazione;setup;

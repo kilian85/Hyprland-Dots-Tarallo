@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Helper privilegiato per applicare un tema SDDM
+# Uso: sddm-theme-apply <tipo> <id>
+# tipo: "standalone" | "astronaut"
+
+TYPE="$1"
+ID="$2"
+ASTRONAUT_DIR="/usr/share/sddm/themes/sddm-astronaut-theme"
+
+[ -z "$TYPE" ] || [ -z "$ID" ] && exit 1
+
+if [ "$TYPE" = "astronaut" ]; then
+    [ ! -f "$ASTRONAUT_DIR/Themes/$ID.conf" ] && exit 2
+    cp "$ASTRONAUT_DIR/Themes/$ID.conf" "$ASTRONAUT_DIR/theme.conf"
+    sed -i 's/^Current=.*/Current=sddm-astronaut-theme/' /etc/sddm.conf
+elif [ "$TYPE" = "standalone" ]; then
+    [ ! -d "/usr/share/sddm/themes/$ID" ] && exit 2
+    sed -i "s/^Current=.*/Current=$ID/" /etc/sddm.conf
+fi

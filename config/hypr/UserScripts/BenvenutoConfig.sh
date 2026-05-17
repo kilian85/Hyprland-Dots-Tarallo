@@ -50,7 +50,7 @@ else
 fi
 
 # Aggiorna lo script con il nuovo messaggio (awk per gestire | e \ nel testo)
-awk -v msg="$MSG" '{gsub(/echo "[^"]*" \| piper-tts/, "echo \"" msg "\" | piper-tts")} 1' "$BENVENUTO_SH" > "${BENVENUTO_SH}.tmp" && mv "${BENVENUTO_SH}.tmp" "$BENVENUTO_SH"
+awk -v msg="$MSG" '{gsub(/echo "[^"]*" \| piper-tts/, "echo \"" msg "\" | piper-tts")} 1' "$BENVENUTO_SH" > "${BENVENUTO_SH}.tmp" && chmod +x "${BENVENUTO_SH}.tmp" && mv "${BENVENUTO_SH}.tmp" "$BENVENUTO_SH"
 
 # Pregenera il file audio così all'avvio non c'è ritardo
 notify-send -u low -t 3000 "🔊 Benvenuto" "Generazione audio in corso..."

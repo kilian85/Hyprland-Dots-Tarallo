@@ -1,5 +1,32 @@
 # Changelog — JAK's Hyprland Dotfiles
 
+## Non rilasciato
+
+- 2026-08-24
+- Migrata l'intera configurazione di Hyprland da hyprlang (`.conf`) a **Lua**
+  - Dalla 0.55 hyprlang è deprecato, dalla 0.57 i `.conf` non verranno più letti
+  - Punto di ingresso `config/hypr/hyprland.lua`; moduli in `config/hypr/lua/`
+  - Resta la divisione fra predefiniti e personalizzazioni: `lua/` viene
+    sovrascritta dagli aggiornamenti, `lua/user/` no (come faceva `UserConfigs/`)
+  - `lua/helpers.lua` legge e traduce al volo i `.conf` che continuano a essere
+    scritti da programmi esterni: wallust, nwg-displays, il menu Animazioni e
+    `01-UserDefaults.conf`, così quegli strumenti funzionano senza modifiche
+  - `copy.sh` preserva `lua/user/` agli aggiornamenti (`restore_lua_userconfigs`)
+  - Istruzioni in `config/hypr/lua/00-Readme`
+- Aggiornati gli script che pilotavano Hyprland con `hyprctl keyword`, rimosso in
+  favore di `hyprctl eval`: `ChangeLayout.sh`, `KeybindsLayoutInit.sh`,
+  `ChangeBlur.sh`, `GameMode.sh`, `TouchPad.sh`, `Dropterminal.sh`,
+  `Tak0-Autodispatch.sh` (anche in UserScripts), `RainbowBorders`,
+  `Kool_Quick_Settings.sh` (il menu ora apre i file `.lua`)
+- `Tak0-Autodispatch.sh` usava ancora `windowrulev2`, tolto in 0.53: ora crea
+  regole con nome e le spegne a fine esecuzione
+- Differenze di comportamento inevitabili:
+  - tolto il bind su `xf86AudioPlayPause`, che non è un keysym XKB valido
+  - velocità delle animazioni limitata a 100 (i preset con `borderangle` a 180
+    girano più veloci)
+  - `workspaceopt allfloat` non esiste più: rifatto con una funzione Lua
+  - tolte tre regole `idle_inhibit` con regex non valida `^(*)$`
+
 ## v2.3.20
 
 - Bugfix release

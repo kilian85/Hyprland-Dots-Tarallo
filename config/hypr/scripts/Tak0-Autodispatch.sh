@@ -82,13 +82,38 @@ done
 #   Ensures that ALL temporary rules are removed
 #   even on crash, SIGTERM, or user interruption.
 
+# Dalla 0.55 le regole si creano con `hyprctl eval` e la nuova API Lua.
+# Le regole con nome restituiscono un riferimento: lo teniamo in una variabile
+# globale lua (_G) per poterle spegnere piu' tardi, visto che ogni `eval` gira
+# in una chiamata separata. Non esiste piu' un "unset".
+
+# Traduce una regola in vecchia sintassi (class:^(x)$) in una tabella `match`.
+rule_to_match() {
+  local rule="$1" key value
+  key="${rule%%:*}"
+  value="${rule#*:}"
+  case "$key" in
+    class)        echo "{ class = \"$value\" }" ;;
+    initialClass) echo "{ initial_class = \"$value\" }" ;;
+    title)        echo "{ title = \"$value\" }" ;;
+    initialTitle) echo "{ initial_title = \"$value\" }" ;;
+    *)            echo "" ;;
+  esac
+}
+
+disable_rule() {
+  hyprctl eval "if _G.$1 then _G.$1:set_enabled(false) end" >>"$LOGFILE" 2>&1 || true
+}
+
 cleanup() {
   echo "Cleanup: removing temporary capture rules and initialWorkspace at $(date)" >>"$LOGFILE"
 
-  hyprctl keyword windowrulev2 "unset, initialClass:.*" >>"$LOGFILE" 2>&1 || true
+  disable_rule tak0_wide
+  local i=0
   for RULE in "${CAPTURE_RULES[@]}"; do
+    i=$((i + 1))
     echo "Cleanup: removing temporary capture rule: $RULE" >>"$LOGFILE"
-    hyprctl keyword windowrulev2 "unset, $RULE" >>"$LOGFILE" 2>&1 || true
+    disable_rule "tak0_cap_$i"
   done
 }
 
@@ -106,8 +131,7 @@ trap cleanup EXIT INT TERM ERR
 #     • steamwebhelper
 
 echo "Applying temporary initialWorkspace capture (initialClass:.*)" >>"$LOGFILE"
-hyprctl keyword windowrulev2 \
-  "initialWorkspace $TARGET_WS silent, initialClass:.*" \
+hyprctl eval "_G.tak0_wide = hl.window_rule({ name = \"tak0-wide\", match = { initial_class = \".*\" }, workspace = \"$TARGET_WS silent\" })" \
   >>"$LOGFILE" 2>&1 || true
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -116,10 +140,16 @@ hyprctl keyword windowrulev2 \
 #   Additional precision rules.
 #   Useful for Electron / Steam multi-process hell.
 
+RULE_INDEX=0
 for RULE in "${CAPTURE_RULES[@]}"; do
+  RULE_INDEX=$((RULE_INDEX + 1))
+  MATCH="$(rule_to_match "$RULE")"
+  if [[ -z "$MATCH" ]]; then
+    echo "Regola non riconosciuta, ignorata: $RULE" >>"$LOGFILE"
+    continue
+  fi
   echo "Applying temporary capture rule: $RULE" >>"$LOGFILE"
-  hyprctl keyword windowrulev2 \
-    "initialWorkspace $TARGET_WS silent, $RULE" \
+  hyprctl eval "_G.tak0_cap_$RULE_INDEX = hl.window_rule({ name = \"tak0-cap-$RULE_INDEX\", match = $MATCH, workspace = \"$TARGET_WS silent\" })" \
     >>"$LOGFILE" 2>&1 || true
 done
 
@@ -154,7 +184,7 @@ sleep 1.5
 
 #!TO-DO: Release the nuclear option ASAP
 echo "Releasing ultra-early wide capture" >>"$LOGFILE"
-hyprctl keyword windowrulev2 "unset, initialClass:.*" >>"$LOGFILE" 2>&1 || true
+disable_rule tak0_wide
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 5️⃣ SUPERVISION LOOP (AUTHORITATIVE PHASE)
@@ -215,8 +245,9 @@ while ((SECONDS < END_TIME)); do
 
     if ((MATCH)) && [[ -z "${SEEN[$ADDR]-}" ]]; then
       echo "Placing window $ADDR (pid $PID, class $CLASS) → WS $TARGET_WS" >>"$LOGFILE"
-      hyprctl dispatch movetoworkspacesilent \
-        "$TARGET_WS,address:$ADDR" >>"$LOGFILE" 2>&1 || true
+      hyprctl dispatch \
+        "hl.dsp.window.move({ workspace = \"$TARGET_WS\", follow = false, window = \"address:$ADDR\" })" \
+        >>"$LOGFILE" 2>&1 || true
       SEEN[$ADDR]=1
     fi
   done < <(hyprctl clients -j | jq -r '.[] | [.pid, .address, .class] | @tsv')

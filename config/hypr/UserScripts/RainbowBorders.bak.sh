@@ -81,8 +81,26 @@ function get_color() {
     fi
 }
 
-# border effect for ACTIVE window
-hyprctl keyword general:col.active_border $(get_color 0) $(get_color 1) $(get_color 2) $(get_color 3) $(get_color 4) $(get_color 5) $(get_color 6) $(get_color 7) $(get_color 8) $(get_color 9) 270deg
+# ---------- APPLY ----------
+# Dalla 0.55 la configurazione e' in Lua: il gradiente si passa come tabella
+# { colors = { ... }, angle = N } invece della vecchia lista di colori.
+# I colori qui sono in formato 0xAARRGGBB e vanno convertiti in rgba(RRGGBBAA).
 
-# border effect for INACTIVE windows
-#hyprctl keyword general:col.inactive_border $(get_color 0) $(get_color 1) $(get_color 2) $(get_color 3) $(get_color 4) $(get_color 5) $(get_color 6) $(get_color 7) $(get_color 8) $(get_color 9) 270deg
+function to_rgba() {
+    local c="${1#0x}"
+    echo "rgba(${c:2:6}${c:0:2})"
+}
+
+function gradient_list() {
+    local out=""
+    for i in $(seq 0 9); do
+        out+="\"$(to_rgba "$(get_color "$i")")\", "
+    done
+    echo "${out%, }"
+}
+
+# effetto sul bordo della finestra ATTIVA
+hyprctl eval "hl.config({ general = { col = { active_border = { colors = { $(gradient_list) }, angle = 270 } } } })"
+
+# effetto sul bordo delle finestre INATTIVE
+#hyprctl eval "hl.config({ general = { col = { inactive_border = { colors = { $(gradient_list) }, angle = 270 } } } })"

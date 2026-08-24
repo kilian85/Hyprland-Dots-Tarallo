@@ -444,6 +444,50 @@ restore_user_configs() {
   fi
 }
 
+# Ripristina i moduli Lua personali (lua/user/) dal backup.
+# Dalla 0.55 Hyprland legge la configurazione in Lua: lua/user/ ha preso il
+# posto di UserConfigs/ come cartella delle personalizzazioni, quindi va
+# preservata agli aggiornamenti esattamente allo stesso modo.
+restore_lua_userconfigs() {
+  local log="$1"
+  local express_mode="$2"
+
+  local DIRPATH="$HOME/.config/hypr"
+  local BACKUP_DIR
+  BACKUP_DIR=$(get_backup_dirname)
+  local BACKUP_LUA_USER="$DIRPATH-backup-$BACKUP_DIR/lua/user"
+
+  if [ ! -d "$BACKUP_LUA_USER" ]; then
+    # Nessun backup Lua: o e' la prima installazione, o si arriva da una
+    # versione ancora in .conf. In quel caso le vecchie personalizzazioni
+    # restano nel backup e vanno ricopiate a mano nei file lua/user/.
+    if [ -d "$DIRPATH-backup-$BACKUP_DIR/UserConfigs" ]; then
+      printf "\n${NOTE:-[NOTE]} La configurazione e' passata da .conf a Lua.\n"
+      printf "${NOTE:-[NOTE]} Le tue vecchie personalizzazioni sono in ${YELLOW:-}$DIRPATH-backup-$BACKUP_DIR/UserConfigs${RESET:-}\n"
+      printf "${NOTE:-[NOTE]} Vanno riportate a mano nei file di ${YELLOW:-}$DIRPATH/lua/user/${RESET:-} (vedi lua/00-Readme).\n"
+    fi
+    return
+  fi
+
+  if [ "$express_mode" -eq 1 ]; then
+    echo "${NOTE:-[NOTE]} Express mode: ripristino automatico di lua/user/." 2>&1 | tee -a "$log"
+    rsync -a "$BACKUP_LUA_USER/" "$DIRPATH/lua/user/" 2>&1 | tee -a "$log"
+    return
+  fi
+
+  printf "\n${NOTE:-[NOTE]} La cartella ${MAGENTA:-}lua/user${RESET:-} contiene le tue impostazioni personali\n"
+  printf "${NOTE:-[NOTE]} (scorciatoie, regole finestre, avvio, decorazioni): si carica dopo\n"
+  printf "${NOTE:-[NOTE]} i moduli predefiniti, quindi vince su di essi.\n"
+
+  read -r -p "${CAT:-[ACTION]} Vuoi ripristinare la tua cartella lua/user precedente? (s/N): " restore_lua_dir
+  if [[ "$restore_lua_dir" != [Nn]* ]]; then
+    rsync -a "$BACKUP_LUA_USER/" "$DIRPATH/lua/user/" 2>&1 | tee -a "$log"
+    echo "${OK:-[OK]} - Cartella lua/user ripristinata." 2>&1 | tee -a "$log"
+  else
+    echo "${NOTE:-[NOTE]} - Ripristino lua/user saltato." 2>&1 | tee -a "$log"
+  fi
+}
+
 restore_user_scripts() {
   local log="$1"
   local express_mode="$2"

@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Initialize J/K keybinds so they always cycle windows globally (no layout-specific behavior)
-# This avoids double-actions when layouts change.
+# Assegna SUPER+J e SUPER+K in modo che ruotino sempre fra le finestre, a
+# prescindere dalla disposizione attiva: evita che l'azione venga eseguita due
+# volte quando si cambia disposizione.
+# Dalla 0.55 la configurazione e' in Lua: si usa `hyprctl eval`.
 
 set -euo pipefail
 
-# Always reset and bind SUPER+J/K the same way on startup
-hyprctl keyword unbind SUPER,J || true
-hyprctl keyword unbind SUPER,K || true
+hyprctl eval 'hl.unbind("SUPER + J")' >/dev/null 2>&1 || true
+hyprctl eval 'hl.unbind("SUPER + K")' >/dev/null 2>&1 || true
 
-# Cycle windows globally: J = next, K = previous
-hyprctl keyword bind SUPER,J,cyclenext
-hyprctl keyword bind SUPER,K,cyclenext,prev
+# J = finestra successiva, K = precedente
+hyprctl eval 'hl.bind("SUPER + J", hl.dsp.window.cycle_next(), { description = "finestra successiva" })'
+hyprctl eval 'hl.bind("SUPER + K", hl.dsp.window.cycle_next({ next = false }), { description = "finestra precedente" })'

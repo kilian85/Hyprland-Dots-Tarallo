@@ -1,3 +1,17 @@
+ATTENZIONE — dalla versione 0.55 di Hyprland questa cartella non e' piu' la
+sede delle personalizzazioni: la configurazione e' passata a Lua e i file da
+modificare stanno in ~/.config/hypr/lua/user/ (vedi lua/00-Readme).
+
+Di questa cartella restano in uso soltanto:
+  01-UserDefaults.conf   terminale, gestore file, motore di ricerca
+  UserAnimations.conf    preset di animazioni scelto con SUPER SHIFT A
+  Laptops.conf           solo la riga $Touchpad_Device, letta da TouchPad.sh
+
+Gli altri .conf qui dentro non vengono piu' letti da nessuno: modificarli non
+ha alcun effetto, restano solo come riferimento della vecchia configurazione.
+
+------------------------------------------------------------------------------
+
 
 KooL's Hyprland-Dots
 

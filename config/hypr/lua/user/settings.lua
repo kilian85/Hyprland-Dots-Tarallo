@@ -1,0 +1,11 @@
+-- user/settings.lua — impostazioni personali (ex UserConfigs/UserSettings.conf)
+--
+-- Questo file non viene toccato dagli aggiornamenti delle dotfiles.
+-- Viene caricato dopo lua/settings.lua, quindi qui si sovrascrive quello che
+-- serve. Per l'elenco delle voci: https://wiki.hypr.land/Configuring/Basics/Variables/
+--
+-- Esempio:
+--   hl.config({
+--       general = { gaps_in = 4, gaps_out = 8 },
+--       input   = { follow_mouse = 2 },
+--   })

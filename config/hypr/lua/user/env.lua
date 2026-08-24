@@ -1,0 +1,24 @@
+-- user/env.lua — variabili d'ambiente personali (ex UserConfigs/ENVariables.conf)
+--
+-- Questo file non viene toccato dagli aggiornamenti delle dotfiles.
+-- Vengono caricate dopo quelle predefinite, quindi qui si possono anche
+-- sovrascrivere. Esempio:
+--
+--   hl.env("GDK_SCALE", "1")
+--   hl.env("QT_SCALE_FACTOR", "1")
+--
+-- NVIDIA (attivare con giudizio, vedi https://wiki.hypr.land/Nvidia/):
+--   hl.env("LIBVA_DRIVER_NAME", "nvidia")
+--   hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+--   hl.env("NVD_BACKEND", "direct")
+--   hl.env("GSK_RENDERER", "ngl")
+--   hl.env("GBM_BACKEND", "nvidia-drm")
+--
+-- Macchine virtuali (attenzione, LIBGL_ALWAYS_SOFTWARE puo' far crollare Hyprland):
+--   hl.env("LIBGL_ALWAYS_SOFTWARE", "1")
+--   hl.env("WLR_RENDERER_ALLOW_SOFTWARE", "1")
+--
+-- Aquamarine e Hyprland (log e scelta della GPU):
+--   hl.env("AQ_TRACE", "1")
+--   hl.env("AQ_DRM_DEVICES", "/dev/dri/card1:/dev/dri/card0")
+--   hl.env("HYPRLAND_TRACE", "1")

@@ -1,0 +1,16 @@
+-- user/laptops.lua — impostazioni personali del portatile (ex UserConfigs/Laptops.conf)
+--
+-- Questo file non viene toccato dagli aggiornamenti delle dotfiles.
+-- Il nome del touchpad NON va qui: sta in UserConfigs/Laptops.conf, perche' lo
+-- legge anche scripts/TouchPad.sh.
+--
+-- Chiusura del coperchio: spegne lo schermo interno quando si chiude, utile con
+-- un monitor esterno collegato. Attenzione, a volte al risveglio lo schermo del
+-- portatile non torna: conviene chiudere il coperchio APERTO prima di spegnere.
+--
+-- hl.bind("switch:off:Lid Switch", function()
+--     hl.monitor({ output = "eDP-1", disabled = true })
+-- end, { locked = true })
+-- hl.bind("switch:on:Lid Switch", function()
+--     hl.monitor({ output = "eDP-1", mode = "preferred", position = "auto", scale = 1 })
+-- end, { locked = true })

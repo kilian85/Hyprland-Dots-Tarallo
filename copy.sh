@@ -485,6 +485,8 @@ restore_hypr_assets "$LOG" "$EXPRESS_MODE"
 printf "\\n%.0s" {1..1}
 
 restore_user_configs "$LOG" "$EXPRESS_MODE" "$INSTALLED_VERSION_AT_START"
+
+restore_lua_userconfigs "$LOG" "$EXPRESS_MODE"
 printf "\\n%.0s" {1..1}
 
 restore_user_scripts "$LOG" "$EXPRESS_MODE"

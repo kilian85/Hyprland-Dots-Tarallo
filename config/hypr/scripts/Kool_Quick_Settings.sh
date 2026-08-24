@@ -13,6 +13,12 @@ source "$tmp_config_file"
 # variables
 configs="$HOME/.config/hypr/configs"
 UserConfigs="$HOME/.config/hypr/UserConfigs"
+# Dalla 0.55 la configurazione di Hyprland e' in Lua. I moduli predefiniti
+# stanno in ~/.config/hypr/lua/ e vengono sovrascritti dagli aggiornamenti;
+# quelli personali in ~/.config/hypr/lua/user/ e non vengono toccati.
+# Restano in formato .conf solo i file letti dagli script (01-UserDefaults.conf,
+# UserAnimations.conf, Laptops.conf per il nome del touchpad).
+luaDir="$HOME/.config/hypr/lua"
 rofi_theme="$HOME/.config/rofi/config-edit.rasi"
 msg=' ⁉️ Choose what to do ⁉️'
 iDIR="$HOME/.config/swaync/images"
@@ -214,18 +220,18 @@ main() {
     # Map choices to corresponding files
     case "$choice" in
     	"Edit User Defaults") file="$UserConfigs/01-UserDefaults.conf" ;;
-        "Edit User ENV variables") file="$UserConfigs/ENVariables.conf" ;;
-        "Edit User Keybinds") file="$UserConfigs/UserKeybinds.conf" ;;
-        "Edit User Startup Apps (overlay)") file="$UserConfigs/Startup_Apps.conf" ;;
-        "Edit User Window Rules (overlay)") file="$UserConfigs/WindowRules.conf" ;;
-        "Edit User Settings") file="$configs/SystemSettings.conf"; show_info "Editing default settings. Copy to UserConfigs/UserSettings.conf to override." ;;
-        "Edit User Decorations") file="$UserConfigs/UserDecorations.conf" ;;
+        "Edit User ENV variables") file="$luaDir/user/env.lua" ;;
+        "Edit User Keybinds") file="$luaDir/user/keybinds.lua" ;;
+        "Edit User Startup Apps (overlay)") file="$luaDir/user/startup.lua" ;;
+        "Edit User Window Rules (overlay)") file="$luaDir/user/windowrules.lua" ;;
+        "Edit User Settings") file="$luaDir/user/settings.lua" ;;
+        "Edit User Decorations") file="$luaDir/user/decorations.lua" ;;
         "Edit User Animations") file="$UserConfigs/UserAnimations.conf" ;;
-        "Edit User Laptop Settings") file="$UserConfigs/Laptops.conf" ;;
-        "Edit System Default Keybinds") file="$configs/Keybinds.conf" ;;
-        "Edit System Default Startup Apps") file="$configs/Startup_Apps.conf" ;;
-        "Edit System Default Window Rules") file="$configs/WindowRules.conf" ;;
-        "Edit System Default Settings") file="$configs/SystemSettings.conf" ;;
+        "Edit User Laptop Settings") file="$luaDir/user/laptops.lua" ;;
+        "Edit System Default Keybinds") file="$luaDir/keybinds.lua" ;;
+        "Edit System Default Startup Apps") file="$luaDir/startup.lua" ;;
+        "Edit System Default Window Rules") file="$luaDir/windowrules.lua" ;;
+        "Edit System Default Settings") file="$luaDir/settings.lua" ;;
         "Set SDDM Wallpaper") $scriptsDir/sddm_wallpaper.sh --normal ;;
         "Choose Kitty Terminal Theme") $scriptsDir/Kitty_themes.sh ;;
         "Configure Monitors (nwg-displays)") 

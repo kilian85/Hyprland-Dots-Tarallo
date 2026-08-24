@@ -1,0 +1,65 @@
+Configurazione di Hyprland in Lua
+=================================
+
+Dalla versione 0.55 Hyprland ha abbandonato il vecchio formato hyprlang (i file
+.conf) in favore di Lua; dalla 0.57 i .conf non vengono più letti del tutto.
+Il punto di ingresso è ~/.config/hypr/hyprland.lua, che richiama i moduli di
+questa cartella.
+
+Vale la stessa divisione che c'era fra configs/ e UserConfigs/:
+
+  lua/          moduli predefiniti — VENGONO SOVRASCRITTI dagli aggiornamenti
+  lua/user/     roba tua           — NON viene toccata dagli aggiornamenti
+
+I moduli di lua/user/ si caricano dopo il predefinito corrispondente, quindi
+quello che scrivi lì ha sempre la precedenza. In pratica:
+
+  lua/env.lua              ->  lua/user/env.lua
+  lua/settings.lua         ->  lua/user/settings.lua
+  lua/keybinds.lua         ->  lua/user/keybinds.lua
+  lua/windowrules.lua      ->  lua/user/windowrules.lua
+  lua/startup.lua          ->  lua/user/startup.lua
+  lua/laptops.lua          ->  lua/user/laptops.lua
+  (solo utente)                lua/user/decorations.lua
+  (solo utente)                lua/user/touchscreen.lua
+
+Gli altri moduli: lua/helpers.lua (funzioni di appoggio), lua/animations.lua
+(applica il preset scelto con SUPER SHIFT A), lua/monitors.lua (monitor e
+workspace).
+
+
+File .conf ancora in uso
+------------------------
+
+Alcuni file restano in formato hyprlang di proposito, perché li scrivono
+programmi esterni che non conoscono il Lua. lua/helpers.lua li legge e li
+traduce al volo, così quei programmi continuano a funzionare:
+
+  wallust/wallust-hyprland.conf     wallust (cambio tema); lo legge anche hyprlock
+  UserConfigs/UserAnimations.conf   menu Animazioni (SUPER SHIFT A)
+  monitors.conf, workspaces.conf    nwg-displays
+  UserConfigs/01-UserDefaults.conf  terminale e gestore file; lo legge anche Waybar
+  UserConfigs/Laptops.conf          nome del touchpad, letto da scripts/TouchPad.sh
+
+hyprlock.conf e hypridle.conf hanno un parser tutto loro e restano hyprlang.
+
+
+Comandi utili
+-------------
+
+  Hyprland --verify-config -c ~/.config/hypr/hyprland.lua   controlla senza riavviare
+  hyprctl reload                                            ricarica
+  hyprctl repl                                              console Lua interattiva
+
+Attenzione: Hyprland ricarica la configurazione appena un file viene salvato.
+Se sposti o rinomini dei moduli, per un istante i require() puntano nel vuoto e
+compare il riquadro rosso d'errore; sparisce da solo appena hyprland.lua torna
+coerente.
+
+Da sapere per gli script: `hyprctl keyword` non esiste più, si usa
+`hyprctl eval 'hl.config({...})'`. Anche `hyprctl getoption` vuole il punto
+(general.layout, non general:layout) e `hyprctl dispatch` vuole la chiamata Lua:
+`hyprctl dispatch 'hl.dsp.focus({ workspace = "3" })'`.
+
+Documentazione completa: https://wiki.hypr.land/
+Gli stub dell'API sono installati in /usr/share/hypr/stubs/hl.meta.lua

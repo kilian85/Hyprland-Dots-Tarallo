@@ -26,19 +26,24 @@ if [[ -z "$touchpad_device" ]]; then
     exit 1
 fi
 
-touchpad_keyword="${TOUCHPAD_KEYWORD:-device:${touchpad_device}:enabled}"
 status_file="${XDG_RUNTIME_DIR:-/tmp}/touchpad.status"
+
+# Dalla 0.55 la configurazione e' in Lua: si usa `hyprctl eval` al posto del
+# vecchio `hyprctl keyword device:NOME:enabled`.
+set_touchpad() {
+    hyprctl eval -r "hl.device({ name = \"${touchpad_device}\", enabled = $1 })"
+}
 
 enable_touchpad() {
     printf "true" >"$status_file"
     notify-send -u low -i "$notif" " Enabling" " touchpad"
-    hyprctl keyword "$touchpad_keyword" true -r
+    set_touchpad true
 }
 
 disable_touchpad() {
     printf "false" >"$status_file"
     notify-send -u low -i "$notif" " Disabling" " touchpad"
-    hyprctl keyword "$touchpad_keyword" false -r
+    set_touchpad false
 }
 
 current_state="false"

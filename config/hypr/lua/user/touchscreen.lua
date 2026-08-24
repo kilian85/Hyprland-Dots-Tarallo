@@ -1,0 +1,9 @@
+-- user/touchscreen.lua — schermo tattile e penna (ex UserConfigs/Touchscreen.conf)
+--
+-- Questo file non viene toccato dagli aggiornamenti delle dotfiles.
+-- Serve sui 2-in-1: lega tocco e penna allo schermo interno, così il puntatore
+-- finisce dove tocchi anche con un monitor esterno collegato.
+-- I nomi dei dispositivi si ricavano con `hyprctl devices`.
+--
+-- hl.device({ name = "wacom-hid-52c9-finger", output = "eDP-1" })
+-- hl.device({ name = "wacom-hid-52c9-pen",    output = "eDP-1" })

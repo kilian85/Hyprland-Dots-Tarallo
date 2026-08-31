@@ -164,24 +164,15 @@ class WelcomeWindow(Gtk.Window):
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        # Sfondo wallpaper: cover (scala per coprire tutta la finestra, ritaglia al centro)
-        self._wp_tmp = None
+        # Sfondo wallpaper. Il ritaglio lo fa il CSS con background-size: cover,
+        # cosi' resta giusto qualunque sia l'altezza della finestra: aggiungendo
+        # un pulsante la finestra cresce, e prima l'immagine restava tagliata
+        # sulla misura vecchia.
         if WALLPAPER and os.path.exists(WALLPAPER):
             try:
-                import tempfile
-                pb = GdkPixbuf.Pixbuf.new_from_file(WALLPAPER)
-                win_w, win_h = 540, 620
-                scale = max(win_w / pb.get_width(), win_h / pb.get_height())
-                new_w = int(pb.get_width() * scale)
-                new_h = int(pb.get_height() * scale)
-                pb_scaled = pb.scale_simple(new_w, new_h, GdkPixbuf.InterpType.BILINEAR)
-                off_x = (new_w - win_w) // 2
-                off_y = (new_h - win_h) // 2
-                pb_crop = pb_scaled.new_subpixbuf(off_x, off_y, win_w, win_h)
-                tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
-                pb_crop.savev(tmp.name, "png", [], [])
-                self._wp_tmp = tmp.name
-                wp_css = f'window {{ background-image: url("{tmp.name}"); background-repeat: no-repeat; }}'.encode()
+                wp_css = (f'window {{ background-image: url("{WALLPAPER}"); '
+                          'background-repeat: no-repeat; background-size: cover; '
+                          'background-position: center; }').encode()
                 wp_provider = Gtk.CssProvider()
                 wp_provider.load_from_data(wp_css)
                 Gtk.StyleContext.add_provider_for_screen(

@@ -44,6 +44,7 @@ GDK_BACKEND=$BACKEND yad \
 "${S} G" "Avvia Game Launcher" "(selettore giochi)" \
 "${S} H" "Apri questo foglio rapido" "" \
 "${S} F2" "Cambia profilo energetico" "Risparmio → Bilanciato → Prestazioni massime" \
+"F9 (tenuto premuto)" "Dettatura vocale" "Parla e rilascia: il testo viene scritto (voxtype)" \
 "${S} Print" "Screenshot" "(grim)" \
 "${S} SPACEBAR" "Attiva/disattiva finestra flottante" "finestra singola" \
 "${S} SHIFT Q" "Termina finestra attiva" "(termina il processo)" \
@@ -67,8 +68,11 @@ GDK_BACKEND=$BACKEND yad \
 "${S} ALT SPACEBAR" "Tutte le finestre flottanti" "tutte le finestre" \
 "${S} ALT O" "Attiva/disattiva sfocatura" "sfocatura normale o ridotta" \
 "${S} ALT E" "Emoticon Rofi" "Emoticon" \
+"${S} ALT T" "OCR: copia il testo dallo schermo" "(seleziona un'area, anche su video)" \
+"${S} ALT SHIFT T" "OCR e chiedi all'IA locale" "(riassumi, traduci, spiega: qwen via Ollama)" \
 "${S} ALT rotella su/giù" "Zoom desktop" "Lente di ingrandimento" \
 "${S} ALT Print" "Screenshot finestra attiva" "solo finestra attiva" \
+"${S} CTRL SHIFT A" "Apri l'agente IA" "(Claude Code in kitty)" \
 "${S} CTRL SHIFT R" "Menu temi Rofi v2" "Scegli temi via selettore (modificato)" \
 "${S} CTRL SHIFT Print" "Screenshot con timer 10 sec" "(grim)" \
 "${S} CTRL ALT W" "Sfondo casuale" "(via swww)" \

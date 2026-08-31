@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Chiave Gemini (dettatura)
-Comment=Configura la chiave che ripulisce il testo dettato con F9
-Exec=/home/tanarox/.config/hypr/UserScripts/ChiaveGemini.sh
-Icon=preferences-desktop-keyboard
-Terminal=false
-Type=Application
-Categories=Settings;

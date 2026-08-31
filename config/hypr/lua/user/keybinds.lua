@@ -34,6 +34,11 @@ hl.bind(mainMod .. " + SHIFT + CTRL + A", hl.dsp.exec_cmd("kitty -e claude"),
 -- La dettatura vocale non passa da qui: voxtype ascolta F9 direttamente
 -- dalla tastiera (tieni premuto, parla, rilascia). Si configura con
 -- `voxtype config set hotkey.key <TASTO>`.
+--
+-- Ripulitura del testo dettato: si chiede a mano, non e' automatica. Un modello
+-- piccolo ogni tanto riformula e cambia il senso, e Whisper punteggia gia' bene.
+hl.bind(mainMod .. " + ALT + D", hl.dsp.exec_cmd(userScripts .. "/RipulisciTesto.sh"),
+    { description = "ripulisci con l'IA il testo selezionato" })
 
 -- Per passare la tastiera a una macchina virtuale:
 -- hl.bind(mainMod .. " + ALT + P", hl.dsp.submap("passthru"))

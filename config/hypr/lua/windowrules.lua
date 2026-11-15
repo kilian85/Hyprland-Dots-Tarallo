@@ -214,7 +214,7 @@ rule({ match = { title = "^(wind.*)$" },     no_initial_focus = true })
 -- Regole sui layer (barre, menu, sfondi)
 --------------------------------------------------------------------
 
-hl.layer_rule({ match = { namespace = "rofi" },                 blur = true })
+hl.layer_rule({ match = { namespace = "rofi" },                 blur = true, ignore_alpha = 0 })  -- ignore_alpha: non sfocare la parte trasparente attorno al menu
 hl.layer_rule({ match = { namespace = "notifications" },        blur = true })
 hl.layer_rule({ match = { namespace = "quickshell:overview" },  blur = true, ignore_alpha = 0.5 })
 

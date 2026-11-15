@@ -30,7 +30,8 @@ hl.on("hyprland.start", function()
     hl.exec_cmd(scriptsDir .. "/Polkit.sh")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
-    hl.exec_cmd("swaync")
+    -- swaync via systemd: lanciato a mano si scontra con l'attivazione D-Bus e lascia swaync.service fallito
+    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && systemctl --user start swaync.service")
     hl.exec_cmd("waybar")
     hl.exec_cmd("qs -c overview") -- panoramica Quickshell
     hl.exec_cmd("hypridle")

@@ -5,7 +5,6 @@ local helpers = require("lua/helpers")
 hl.config({
     dwindle = {
         preserve_split       = true,
-        special_scale_factor = 0.8,
     },
 
     master = {
@@ -124,3 +123,7 @@ hl.gesture({
         hl.dispatch(hl.dsp.exec_cmd(helpers.scripts .. "/OverviewToggle.sh"))
     end,
 })
+
+-- Workspace speciale (scratchpad) rimpicciolito: sostituisce il vecchio
+-- dwindle.special_scale_factor = 0.8, deprecato da Hyprland 0.57.
+hl.workspace_rule({ workspace = "s[true]", gaps_out = { top = 120, right = 192, bottom = 120, left = 192 } })
